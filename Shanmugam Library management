@@ -1,0 +1,62 @@
+# MySQL
+# Library Book Management System (MySQL Project)
+
+This project demonstrates how to manage library book records and member borrow history using SQL.
+
+## Features
+- Member registration
+- Book inventory management
+- Book issue and return tracking
+
+## Author
+Shanmuganandam K
+
+CREATE DATABASE library_management;
+USE library_management;
+
+CREATE TABLE members (
+    member_id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    phone VARCHAR(15),
+    join_date DATE
+);
+
+CREATE TABLE books (
+    book_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(150) NOT NULL,
+    author VARCHAR(100),
+    genre VARCHAR(50),
+    available_copies INT DEFAULT 1
+);
+
+CREATE TABLE issued_books (
+    issue_id INT AUTO_INCREMENT PRIMARY KEY,
+    member_id INT NOT NULL,
+    book_id INT NOT NULL,
+    issue_date DATE,
+    return_date DATE,
+    FOREIGN KEY (member_id) REFERENCES members(member_id),
+    FOREIGN KEY (book_id) REFERENCES books(book_id)
+);
+
+INSERT INTO members (full_name, email, phone, join_date) VALUES
+('Ravi Kumar', 'ravi@example.com', '9876543210', '2023-01-12'),
+('Sneha P', 'sneha@example.com', '9988776655', '2023-03-01'),
+('Arun M', 'arun@example.com', '9123456780', '2023-04-18');
+
+INSERT INTO books (title, author, genre, available_copies) VALUES
+('Data Science Fundamentals', 'James Lee', 'Education', 3),
+('The Great Gatsby', 'F. Scott Fitzgerald', 'Novel', 2),
+('Python Programming Handbook', 'Sarah John', 'Technology', 4);
+
+INSERT INTO issued_books (member_id, book_id, issue_date, return_date) VALUES
+(1, 1, '2024-01-15', NULL),
+(2, 3, '2024-01-20', '2024-02-01');
+
+SELECT m.full_name, b.title, i.issue_date, i.return_date
+FROM issued_books i
+JOIN members m ON i.member_id = m.member_id
+JOIN books b ON i.book_id = b.book_id;
+
+
